@@ -3,6 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,10 +27,7 @@ export default function Home() {
   };
 
   const handleNewGame = () => {
-    toast.success("🎮 Game feature coming soon!", {
-      description:
-        "We're working hard to bring you the best word wheel experience!",
-    });
+    router.push("/game");
   };
 
   const handleLeaderboard = () => {
@@ -72,30 +70,36 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+      className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10"
+    >
       <div className="w-full max-w-sm">
-          <GameLanding
-            userName={session.user?.name || "User"}
-            userImage={session.user?.image || ""}
-            onNewGame={handleNewGame}
-            onLeaderboard={handleLeaderboard}
-            onRules={handleRules}
-          />
+        <GameLanding
+          userName={session.user?.name || "User"}
+          userImage={session.user?.image || ""}
+          onNewGame={handleNewGame}
+          onLeaderboard={handleLeaderboard}
+          onRules={handleRules}
+        />
 
-          {/* Sign Out Button */}
-          <div className="flex justify-center">
-            <div className="w-full max-w-sm">
-              <Separator className="mb-4 mt-4" />
-              <Button
-                variant="ghost"
-                className="w-full"
-                onClick={handleSignOut}
-              >
-                Sign Out
-              </Button>
-            </div>
+        {/* Sign Out Button */}
+        <div className="flex justify-center">
+          <div className="w-full max-w-sm">
+            <Separator className="mb-4 mt-4" />
+            <Button
+              variant="ghost"
+              className="w-full"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </Button>
           </div>
         </div>
       </div>
+    </motion.div>
   );
 }
