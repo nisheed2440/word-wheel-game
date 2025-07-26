@@ -50,7 +50,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           </form>
           <div className="relative hidden bg-muted md:block">
             <img
-              src="/undraw_mobile-log-in_0n4q.svg"
+              src="/undraw_secure-login_m11a.svg"
               alt="Mobile login illustration"
               className="absolute inset-0 h-full w-full object-contain p-8 dark:brightness-[0.8] dark:grayscale"
             />
