@@ -87,11 +87,11 @@ export function CurrentWord({
         <div className="text-center mt-4">
           <Skeleton className="h-6 w-24 mx-auto" />
         </div>
-        <Card className={`w-full max-w-sm md:max-w-2xl ${className}`}>
-          <CardContent className="p-6">
+        <Card className={`p-0 w-full max-w-sm ${className}`}>
+          <CardContent className="p-4">
             <div className="flex justify-center items-center gap-2">
               {Array.from({ length: 8 }).map((_, index) => (
-                <Skeleton key={index} className="w-10 h-12 md:w-12 md:h-16 rounded-lg" />
+                <Skeleton key={index} className="w-10 h-12 rounded-lg" />
               ))}
             </div>
           </CardContent>

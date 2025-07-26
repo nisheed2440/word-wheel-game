@@ -2,6 +2,7 @@
 
 import { WordWheelSlice } from "./word-wheel-slice"
 import { WHEEL_SIZES, LETTER_PAIR_INDICES } from "../constants/wheel-config"
+import { Skeleton } from "./ui/skeleton"
 
 interface WordWheelProps {
   words?: string[]
@@ -11,6 +12,9 @@ interface WordWheelProps {
 
 export function WordWheel({ words = [], onLettersAtTop, className = "" }: WordWheelProps) {
   const rotations = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
+  if (words.length === 0) {
+    return <Skeleton className="rounded-full h-[380px] w-[380px] animate-pulse" />;
+  }
   return (
     <div className={`relative ${className}`} style={{ width: WHEEL_SIZES[0], height: WHEEL_SIZES[0] }}>
       {WHEEL_SIZES.map((size, index) => {
