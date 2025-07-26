@@ -4,11 +4,13 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Play, RotateCcw } from "lucide-react";
+import { Play } from "lucide-react";
+import MobileNav from "@/components/mobile-nav";
+import { useTheme } from "next-themes";
 
 export default function GamePage() {
   const router = useRouter();
-
+  const { theme, setTheme } = useTheme();
   const handleBack = () => {
     router.back();
   };
@@ -29,38 +31,22 @@ export default function GamePage() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
-      className="min-h-screen bg-primary p-6 flex flex-col"
+      className="min-h-screen bg-muted flex flex-col"
     >
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: -60 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.3 }}
         className="flex items-center justify-between mb-8"
       >
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={handleBack}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Button>
-        
-        <h1 className="text-2xl font-bold text-primary-foreground">
-          Word Wheel Game
-        </h1>
-        
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={handleRestart}
-          className="flex items-center gap-2"
-        >
-          <RotateCcw className="h-4 w-4" />
-          Restart
-        </Button>
+        <MobileNav
+          onQuitGame={handleBack}
+          onThemeToggle={() => {
+            setTheme(theme === "dark" ? "light" : "dark");
+          }}
+          currentTheme={theme as "light" | "dark"}
+        />
       </motion.div>
 
       {/* Game Container */}
@@ -71,7 +57,7 @@ export default function GamePage() {
           transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
           className="w-full max-w-md"
         >
-          <Card className="bg-background/95 backdrop-blur-sm shadow-2xl">
+          <Card className="bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl font-bold text-primary">
                 🎯 Word Wheel
@@ -80,7 +66,7 @@ export default function GamePage() {
                 Find as many words as you can using the letters in the wheel!
               </p>
             </CardHeader>
-            
+
             <CardContent className="space-y-6">
               {/* Game Wheel Placeholder */}
               <motion.div
@@ -145,9 +131,10 @@ export default function GamePage() {
         className="text-center text-primary-foreground/80"
       >
         <p className="text-sm">
-          Create words using the center letter and any combination of outer letters
+          Create words using the center letter and any combination of outer
+          letters
         </p>
       </motion.div>
     </motion.div>
   );
-} 
+}

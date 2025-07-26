@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { LoginForm } from '@/components/login-form'
 import { Card, CardContent } from '@/components/ui/card'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 function LoginFormFallback() {
   return (
@@ -64,9 +65,14 @@ export default function LoginPage() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10"
+      className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10 relative"
     >
-      <div className="max-w-sm md:max-w-3xl">
+      {/* Theme Toggle - Top Right */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      
+      <div className="min-w-sm md:max-w-3xl">
         <Suspense fallback={<LoginFormFallback />}>
           <LoginForm />
         </Suspense>

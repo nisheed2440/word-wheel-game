@@ -33,14 +33,14 @@ export function LoginForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
+    <div className={cn("flex flex-col gap-6 ", className)} {...props}>
+      <Card className="overflow-hidden p-0 bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none">
         <CardContent className="grid p-0 md:grid-cols-2">
-            <div className="relative bg-muted rounded-lg md:hidden rounded-b-none">
+            <div className="relative rounded-lg md:hidden rounded-b-none">
               <img
                 src="/undraw_secure-login_m11a.svg"
                 alt="Mobile login illustration"
-                className="inset-0 h-48 w-full object-contain p-8 dark:brightness-[0.8] dark:grayscale"
+                className="inset-0 h-48 w-full object-contain p-8"
               />
             </div>
           <form
@@ -54,7 +54,7 @@ export function LoginForm({
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome</h1>
                 <p className="text-balance text-muted-foreground">
-                  Sign in to your Word Wheel account with Google
+                  Sign in to your account with Google
                 </p>
               </div>
               <Button type="submit" className="w-full">
@@ -72,11 +72,11 @@ export function LoginForm({
               </Button>
             </div>
           </form>
-          <div className="relative hidden bg-muted md:block">
+          <div className="relative hidden md:block">
             <img
               src="/undraw_secure-login_m11a.svg"
               alt="Mobile login illustration"
-              className="absolute inset-0 h-full w-full object-contain p-8 dark:brightness-[0.8] dark:grayscale"
+              className="absolute inset-0 h-full w-full object-contain p-8"
             />
           </div>
         </CardContent>

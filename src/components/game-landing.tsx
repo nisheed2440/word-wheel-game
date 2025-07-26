@@ -49,7 +49,7 @@ export default function GameLanding({
   ];
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none">
       <CardContent className="p-8">
         <div className="flex flex-col items-center space-y-8">
           {/* Avatar Section */}
@@ -79,7 +79,7 @@ export default function GameLanding({
                 {carouselItems.map((item) => (
                   <CarouselItem key={item.id}>
                     <div className="p-1 space-y-2">
-                      <Card className="relative overflow-hidden h-48 group cursor-pointer" onClick={item.onClick}>
+                      <Card className="relative overflow-hidden h-48 group cursor-pointer dark:shadow-none" onClick={item.onClick}>
                         <CardContent className="p-0 h-full relative">
                           {/* Background Image */}
                           <div className="relative w-full h-full">

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ThemeToggle } from "@/components/theme-toggle";
 import GameLanding from "@/components/game-landing";
 
 export default function Home() {
@@ -75,8 +76,13 @@ export default function Home() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10"
+      className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10 relative"
     >
+      {/* Theme Toggle - Top Right */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      
       <div className="w-full max-w-sm">
         <GameLanding
           userName={session.user?.name || "User"}
