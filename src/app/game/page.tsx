@@ -6,6 +6,8 @@ import MobileNav from "@/components/mobile-nav";
 import { useTheme } from "next-themes";
 import { WordWheel } from "@/components/word-wheel";
 import { CurrentWord } from "@/components/current-word";
+import { TouchHandler } from "@/components/game/touch-handler";
+import { usePreventScroll } from "@/hooks/use-prevent-scroll";
 import {
   selectAllWords,
   selectCurrentWordLoading,
@@ -22,10 +24,14 @@ import {
 } from "@/lib/store/gameSlice";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { TouchButton } from "@/components/ui/touch-button";
 
 export default function GamePage() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+  
+  // Prevent page scrolling during game
+  usePreventScroll({ enabled: true });
   const currentWord = useSelector(selectCurrentWordString);
   const currentWordLoading = useSelector(selectCurrentWordLoading);
   const wordsToFind = useSelector(selectWordsToFind);
@@ -50,14 +56,19 @@ export default function GamePage() {
     dispatch(setCurrentWord({ index: wheelIndex, letters }));
   };
 
+  const handleCheckWord = () => {
+    dispatch(setAnimationStarted(true));
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
-      className="min-h-screen bg-muted flex flex-col"
-    >
+    <TouchHandler className="min-h-screen bg-muted flex flex-col">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="min-h-screen bg-muted flex flex-col"
+      >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -60 }}
@@ -114,17 +125,19 @@ export default function GamePage() {
           </motion.div>
         </div>
 
-        <div className="flex items-center justify-center pb-6">
-          <Button
+        <div className="flex items-center justify-center p-6">
+          <TouchButton
             size="lg"
-            className="w-full max-w-sm  text-lg uppercase font-bold mt-4"
-            onClick={() => dispatch(setAnimationStarted(true))}
+            className="w-full max-w-sm text-lg uppercase font-bold mt-4"
+            onClick={handleCheckWord}
             disabled={animationStarted}
+            preventTouchDefault={false}
           >
             Check Word
-          </Button>
+          </TouchButton>
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </TouchHandler>
   );
 }
