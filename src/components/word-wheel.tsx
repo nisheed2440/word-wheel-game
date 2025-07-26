@@ -8,11 +8,13 @@ interface WordWheelProps {
   words?: string[]
   onLettersAtTop?: (letters: string, sectorIndex: number, wheelIndex: number) => void
   className?: string
+  isGameActive?: boolean
+  disabled?: boolean
 }
 
-export function WordWheel({ words = [], onLettersAtTop, className = "" }: WordWheelProps) {
+export function WordWheel({ words = [], onLettersAtTop, className = "", isGameActive = true, disabled = false }: WordWheelProps) {
   const rotations = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-  if (words.length === 0) {
+  if (words.length === 0 || !isGameActive) {
     return <Skeleton className="rounded-full h-[380px] w-[380px] animate-pulse" />;
   }
   return (
@@ -38,6 +40,7 @@ export function WordWheel({ words = [], onLettersAtTop, className = "" }: WordWh
             }
             size={size}
             showPointer={index === 0} // Only largest wheel shows pointer
+            disabled={disabled}
           />
         </div>
       )})}

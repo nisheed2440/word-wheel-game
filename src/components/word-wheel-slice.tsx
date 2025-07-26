@@ -14,6 +14,7 @@ interface WordWheelSliceProps {
   size?: number
   showPointer?: boolean // Optional pointer
   className?: string
+  disabled?: boolean
 }
 
 export function WordWheelSlice({
@@ -24,6 +25,7 @@ export function WordWheelSlice({
   size = 280,
   showPointer = true, // Default to showing pointer
   className = "",
+  disabled = false,
 }: WordWheelSliceProps) {
   // Motion values for the wheel
   const wheelRotation = useMotionValue(initialRotation)
@@ -217,7 +219,7 @@ export function WordWheelSlice({
 
   return (
     <div
-      className={`relative select-none ${className}`}
+      className={`relative select-none ${className} ${disabled ? "opacity-50 pointer-events-none cursor-not-allowed" : ""} `}
       style={{ width: size, height: size }}
       ref={wheelRef}
       onMouseDown={handleDragStart}
