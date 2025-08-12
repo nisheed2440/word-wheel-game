@@ -152,6 +152,7 @@ export default function GamePage() {
               <CurrentWord
                 word={currentWord}
                 secretWords={wordsToFind}
+                foundWords={foundWords}
                 isLoading={currentWordLoading && isGameActive}
                 onErrorAnimationStart={() =>
                   dispatch(setAnimationStarted(true))

@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 interface CurrentWordProps {
   word: string
   secretWords: string[]
+  foundWords?: string[]
   className?: string
   onWordMatch?: () => void
   onWordError?: () => void
@@ -20,6 +21,7 @@ interface CurrentWordProps {
 export function CurrentWord({
   word,
   secretWords,
+  foundWords = [],
   className,
   onWordMatch,
   onWordError,
@@ -35,7 +37,7 @@ export function CurrentWord({
 
   const normalizedWord = word.padEnd(8, " ").slice(0, 8)
 
-  // Function to check if a letter pair at a specific position matches any target word
+  // Function to check if a letter pair at a specific position matches any unfound target word
   // The word wheel works with 2-letter combinations: positions (0,1), (2,3), (4,5), (6,7)
   const isPairInCorrectPosition = (position: number): boolean => {
     // Calculate which pair this position belongs to (0,1 -> pair 0; 2,3 -> pair 1; etc.)
@@ -48,10 +50,22 @@ export function CurrentWord({
     // Skip if the pair is incomplete (less than 2 characters)
     if (currentPair.length < 2) return false
     
-    // Check if this pair matches the same pair position in any target word
-    return secretWords.some(targetWord => {
-      const targetPair = targetWord.slice(pairStartIndex, pairStartIndex + 2)
-      return targetPair.toUpperCase() === currentPair.toUpperCase()
+    // Filter out found words to only check against unfound target words
+    const unfoundWords = secretWords.filter(targetWord => 
+      !foundWords.includes(targetWord.toLowerCase())
+    )
+    
+    // Check if this pair matches the same pair position in any unfound target word
+    // OR if this pair appears in ANY pair position of any unfound target word
+    return unfoundWords.some(targetWord => {
+      // Check all possible pair positions in the target word
+      for (let i = 0; i < targetWord.length - 1; i += 2) {
+        const targetPair = targetWord.slice(i, i + 2)
+        if (targetPair.length === 2 && targetPair.toUpperCase() === currentPair.toUpperCase()) {
+          return true
+        }
+      }
+      return false
     })
   }
 
