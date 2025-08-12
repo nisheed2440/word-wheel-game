@@ -19,7 +19,7 @@ import {
   selectAllWordsFound,
   selectGameCompleted,
   selectTimeSpent,
-  selectTotalPoints,
+  selectGameStartTime,
 } from "@/lib/store/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,6 +29,7 @@ import {
   startGame,
   setGameCompleted,
   resetGame,
+  updateTime,
 } from "@/lib/store/gameSlice";
 import { useEffect } from "react";
 import { TouchButton } from "@/components/ui/touch-button";
@@ -52,7 +53,7 @@ export default function GamePage() {
   const allWordsFound = useSelector(selectAllWordsFound);
   const gameCompleted = useSelector(selectGameCompleted);
   const timeSpent = useSelector(selectTimeSpent);
-  const totalPoints = useSelector(selectTotalPoints);
+  const gameStartTime = useSelector(selectGameStartTime);
   const dispatch = useDispatch();
   const handleBack = () => {
     router.back();
@@ -67,9 +68,29 @@ export default function GamePage() {
     console.log(foundWords);
   }, [wordsToFind, foundWords]);
 
+  // Timer effect to update elapsed time
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isGameActive && gameStartTime && !gameCompleted) {
+      interval = setInterval(() => {
+        const now = Date.now();
+        const elapsed = Math.floor((now - gameStartTime) / 1000);
+        dispatch(updateTime(elapsed));
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isGameActive, gameStartTime, gameCompleted, dispatch]);
+
   // Trigger confetti and mark game as completed when all words are found
   useEffect(() => {
+    console.log("allWordsFound", allWordsFound);
+    console.log("gameCompleted", gameCompleted);
     if (allWordsFound && !gameCompleted) {
+      console.log("triggering confetti");
       triggerGameCompleteConfetti();
       dispatch(setGameCompleted(true));
     }
@@ -140,6 +161,7 @@ export default function GamePage() {
                   dispatch(setAnimationStarted(true))
                 }
                 onWordMatch={() => {
+                  console.log("adding found word", currentWord);
                   dispatch(addFoundWord(currentWord));
                   dispatch(setAnimationStarted(false));
                 }}

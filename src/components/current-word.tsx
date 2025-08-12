@@ -63,7 +63,6 @@ export function CurrentWord({
   useEffect(() => {
     if (checkTrigger && checkTrigger > 0) {
       const trimmedWord = normalizedWord.trim().toUpperCase()
-
       if (secretWords.includes(trimmedWord)) {
         onSuccessAnimationStart?.()
         setTimeout(() => {
@@ -86,7 +85,7 @@ export function CurrentWord({
       }, 1500)
       return () => clearTimeout(timer)
     }
-  }, [showSuccess, onWordMatch])
+  }, [showSuccess])
 
   useEffect(() => {
     if (showError) {
@@ -96,7 +95,7 @@ export function CurrentWord({
       }, 600)
       return () => clearTimeout(timer)
     }
-  }, [showError, onWordError])
+  }, [showError])
 
   const letters = normalizedWord.split("")
   const previousLetters = previousWord.split("")

@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -11,9 +10,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import Jdenticon from "react-jdenticon";
 
 interface GameLandingProps {
-  userImage?: string;
   userName?: string;
   onNewGame?: () => void;
   onLeaderboard?: () => void;
@@ -22,7 +21,6 @@ interface GameLandingProps {
 
 export default function GameLanding({
   userName = "User Name",
-  userImage,
   onNewGame,
   onLeaderboard,
   onRules,
@@ -54,16 +52,12 @@ export default function GameLanding({
         <div className="flex flex-col items-center space-y-8">
           {/* Avatar Section */}
           <div className="flex flex-col items-center space-y-4">
-            <Avatar className="w-20 h-20">
-              <AvatarImage src={userImage} />
-              <AvatarFallback className="text-lg">
-                {userName
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <div className="w-20 h-20 flex items-center justify-center rounded-full overflow-hidden border-2 border-muted">
+              <Jdenticon
+                value={userName + Date.now().toString() || "Player"}
+                size="80"
+              />
+            </div>
 
             {/* Welcome Text */}
             <div className="text-center space-y-1">
