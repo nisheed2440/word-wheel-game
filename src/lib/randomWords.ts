@@ -89,7 +89,10 @@ function shuffleArray<T>(array: T[]): void {
  * Selects 4 real words from dictionary and generates 8 random letter combinations for WordWheel
  * @returns An array of exactly 12 words (4 real + 8 random) as a tuple type
  */
-export function getRandomWordsForWheel(): {
+export function getRandomWordsForWheel(
+  realWordsCount: number = 4,
+  randomWordsCount: number = 8
+): {
     realWords: string[];
     randomWords: string[];
     allWords: string[];
@@ -104,7 +107,7 @@ export function getRandomWordsForWheel(): {
   const usedIndices = new Set<number>();
 
   // Select 4 real words from dictionary
-  while (realWords.length < 4) {
+  while (realWords.length < realWordsCount) {
     const randomIndex = Math.floor(Math.random() * dictionary.length);
     
     if (!usedIndices.has(randomIndex)) {
@@ -117,7 +120,7 @@ export function getRandomWordsForWheel(): {
   }
 
   // Generate 8 random letter combinations
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < randomWordsCount; i++) {
     randomWords.push(generateRandomLetterCombo());
   }
 
