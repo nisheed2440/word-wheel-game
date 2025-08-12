@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import Jdenticon from "react-jdenticon";
+import { getImagePath } from "@/lib/image-path";
 
 interface GameLandingProps {
   userName?: string;
@@ -29,19 +30,19 @@ export default function GameLanding({
     {
       id: "new-game",
       title: "New Game",
-      image: "/undraw_gaming_v7a6.svg",
+      image: getImagePath("/undraw_gaming_v7a6.svg"),
       onClick: onNewGame,
     },
     {
       id: "leaderboard",
       title: "Leaderboard",
-      image: "/undraw_powerful_e1sw.svg",
+      image: getImagePath("/undraw_powerful_e1sw.svg"),
       onClick: onLeaderboard,
     },
     {
       id: "rules",
       title: "Rules",
-      image: "/undraw_teaching_58yg.svg",
+      image: getImagePath("/undraw_teaching_58yg.svg"),
       onClick: onRules,
     },
   ];
@@ -78,7 +79,7 @@ export default function GameLanding({
                           {/* Background Image */}
                           <div className="relative w-full h-full">
                             <Image
-                              src={item.image || "/placeholder.svg"}
+                              src={item.image || getImagePath("/placeholder.svg")}
                               alt={item.title}
                               fill
                               className="object-contain"

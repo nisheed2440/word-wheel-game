@@ -1,10 +1,12 @@
 import type { NextConfig } from "next";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
-  assetPrefix: "/word-wheel-game/",
-  basePath: "/word-wheel-game",
+  assetPrefix: basePath,
+  basePath: basePath,
   images: {
     remotePatterns: [
       {

@@ -42,6 +42,8 @@ jobs:
         run: pnpm install
         
       - name: Build Next.js app
+        env:
+          NEXT_PUBLIC_BASE_PATH: /word-wheel-game
         run: pnpm build
         
       - name: Upload build artifacts
