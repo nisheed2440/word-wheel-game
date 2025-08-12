@@ -12,6 +12,7 @@ export const selectCurrentWord = (state: RootState) => state.game.currentWord
 export const selectIsGameActive = (state: RootState) => state.game.isGameActive
 export const selectGameStartTime = (state: RootState) => state.game.gameStartTime
 export const selectAnimationStarted = (state: RootState) => state.game.animationStarted
+export const selectGameCompleted = (state: RootState) => state.game.gameCompleted
 
 // Computed selectors
 export const selectFormattedTime = createSelector(

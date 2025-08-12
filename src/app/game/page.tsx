@@ -17,6 +17,9 @@ import {
   selectAnimationStarted,
   selectFoundWords,
   selectAllWordsFound,
+  selectGameCompleted,
+  selectTimeSpent,
+  selectTotalPoints,
 } from "@/lib/store/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,11 +27,14 @@ import {
   setAnimationStarted,
   setCurrentWord,
   startGame,
+  setGameCompleted,
+  resetGame,
 } from "@/lib/store/gameSlice";
 import { useEffect } from "react";
 import { TouchButton } from "@/components/ui/touch-button";
 import { cx } from "class-variance-authority";
 import { triggerGameCompleteConfetti } from "@/lib/confetti";
+import { GameCompletionModal } from "@/components/game-completion-modal";
 
 export default function GamePage() {
   const router = useRouter();
@@ -44,6 +50,9 @@ export default function GamePage() {
   const isGameActive = useSelector(selectIsGameActive);
   const animationStarted = useSelector(selectAnimationStarted);
   const allWordsFound = useSelector(selectAllWordsFound);
+  const gameCompleted = useSelector(selectGameCompleted);
+  const timeSpent = useSelector(selectTimeSpent);
+  const totalPoints = useSelector(selectTotalPoints);
   const dispatch = useDispatch();
   const handleBack = () => {
     router.back();
@@ -58,12 +67,13 @@ export default function GamePage() {
     console.log(foundWords);
   }, [wordsToFind, foundWords]);
 
-  // Trigger confetti when all words are found
+  // Trigger confetti and mark game as completed when all words are found
   useEffect(() => {
-    if (allWordsFound) {
+    if (allWordsFound && !gameCompleted) {
       triggerGameCompleteConfetti();
+      dispatch(setGameCompleted(true));
     }
-  }, [allWordsFound]);
+  }, [allWordsFound, gameCompleted, dispatch]);
 
   const handleLettersAtTop = (
     letters: string,
@@ -75,6 +85,15 @@ export default function GamePage() {
 
   const handleCheckWord = () => {
     dispatch(setAnimationStarted(true));
+  };
+
+  const handleNewGame = () => {
+    dispatch(startGame());
+  };
+
+  const handleMainMenu = () => {
+    dispatch(resetGame());
+    router.push("/");
   };
 
   return (
@@ -171,6 +190,14 @@ export default function GamePage() {
           </div>
         </div>
       </motion.div>
+      
+      {/* Game Completion Modal */}
+      <GameCompletionModal
+        isOpen={gameCompleted}
+        timeSpent={timeSpent}
+        onMainMenu={handleMainMenu}
+        onNewGame={handleNewGame}
+      />
     </TouchHandler>
   );
 }

@@ -11,6 +11,7 @@ export interface GameState {
   isGameActive: boolean // Whether the game timer is running
   gameStartTime: number | null // Timestamp when game started
   animationStarted: boolean // Whether the animation has started
+  gameCompleted: boolean // Whether the game has been completed
 }
 
 const initialState: GameState = {
@@ -23,6 +24,7 @@ const initialState: GameState = {
   isGameActive: false,
   gameStartTime: null,
   animationStarted: false,
+  gameCompleted: false,
 }
 
 export const gameSlice = createSlice({
@@ -41,6 +43,7 @@ export const gameSlice = createSlice({
       state.allWords = allWords
       state.wordsToFind = realWords
       state.animationStarted = false
+      state.gameCompleted = false
     },
     
     pauseGame: (state) => {
@@ -123,6 +126,13 @@ export const gameSlice = createSlice({
       state.animationStarted = action.payload
     },
 
+    setGameCompleted: (state, action: PayloadAction<boolean>) => {
+      state.gameCompleted = action.payload
+      if (action.payload) {
+        state.isGameActive = false
+      }
+    },
+
   },
 })
 
@@ -143,6 +153,7 @@ export const {
   setAllWords,
   setWordsToFind,
   setAnimationStarted,
+  setGameCompleted,
 } = gameSlice.actions
 
 // Export reducer
