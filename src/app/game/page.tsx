@@ -15,6 +15,8 @@ import {
   selectIsGameActive,
   selectWordsToFind,
   selectAnimationStarted,
+  selectWordsRemaining,
+  selectFoundWords,
 } from "@/lib/store/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,7 +25,6 @@ import {
   startGame,
 } from "@/lib/store/gameSlice";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { TouchButton } from "@/components/ui/touch-button";
 
 export default function GamePage() {
@@ -35,6 +36,8 @@ export default function GamePage() {
   const currentWord = useSelector(selectCurrentWordString);
   const currentWordLoading = useSelector(selectCurrentWordLoading);
   const wordsToFind = useSelector(selectWordsToFind);
+  const wordsRemaining = useSelector(selectWordsRemaining);
+  const foundWords = useSelector(selectFoundWords);
   const allWords = useSelector(selectAllWords);
   const isGameActive = useSelector(selectIsGameActive);
   const animationStarted = useSelector(selectAnimationStarted);
@@ -47,6 +50,12 @@ export default function GamePage() {
   useEffect(() => {
     dispatch(startGame());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log(wordsToFind);
+    console.log(wordsRemaining);
+    console.log(foundWords);
+  }, [wordsToFind, wordsRemaining, foundWords]);
 
   const handleLettersAtTop = (
     letters: string,

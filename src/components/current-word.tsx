@@ -35,6 +35,26 @@ export function CurrentWord({
 
   const normalizedWord = word.padEnd(8, " ").slice(0, 8)
 
+  // Function to check if a letter pair at a specific position matches any target word
+  // The word wheel works with 2-letter combinations: positions (0,1), (2,3), (4,5), (6,7)
+  const isPairInCorrectPosition = (position: number): boolean => {
+    // Calculate which pair this position belongs to (0,1 -> pair 0; 2,3 -> pair 1; etc.)
+    const pairIndex = Math.floor(position / 2)
+    const pairStartIndex = pairIndex * 2
+    
+    // Get the current 2-letter combination for this pair
+    const currentPair = word.slice(pairStartIndex, pairStartIndex + 2)
+    
+    // Skip if the pair is incomplete (less than 2 characters)
+    if (currentPair.length < 2) return false
+    
+    // Check if this pair matches the same pair position in any target word
+    return secretWords.some(targetWord => {
+      const targetPair = targetWord.slice(pairStartIndex, pairStartIndex + 2)
+      return targetPair.toUpperCase() === currentPair.toUpperCase()
+    })
+  }
+
   useEffect(() => {
     setPreviousWord(displayWord)
     setDisplayWord(normalizedWord)
@@ -108,7 +128,10 @@ export function CurrentWord({
       <Card className={`p-0 w-full max-w-sm bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none ${className}`}>
         <CardContent className="p-4">
           <div className="flex justify-center items-center gap-2">
-            {letters.map((letter, index) => (
+            {letters.map((letter, index) => {
+              const isCorrectPosition = isPairInCorrectPosition(index)
+              
+              return (
               <motion.div
                 key={index}
                 className={`relative w-10 h-12 rounded-lg border-2 overflow-hidden transition-colors duration-500 ${
@@ -116,7 +139,9 @@ export function CurrentWord({
                     ? "bg-green-500 border-green-600"
                     : showError
                       ? "bg-red-500 border-red-600"
-                      : "bg-slate-100 border-slate-300"
+                      : isCorrectPosition
+                        ? "bg-green-200 border-green-400"
+                        : "bg-slate-100 border-slate-300"
                 }`}
                 animate={
                   showSuccess
@@ -164,7 +189,13 @@ export function CurrentWord({
                   <motion.div
                     key={`${letter}-${index}`}
                     className={`absolute inset-0 flex items-center justify-center text-lg md:text-2xl font-bold transition-colors duration-500 ${
-                      showSuccess ? "text-green-800" : showError ? "text-red-100" : "text-slate-800"
+                      showSuccess 
+                        ? "text-green-800" 
+                        : showError 
+                          ? "text-red-100" 
+                          : isCorrectPosition
+                            ? "text-green-800"
+                            : "text-slate-800"
                     }`}
                     initial={previousLetters[index] !== letter ? { y: -64, opacity: 0 } : { y: 0, opacity: 1 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -184,7 +215,8 @@ export function CurrentWord({
                   <div className="absolute bottom-0 left-0 right-0 h-px bg-slate-400 opacity-30" />
                 </div>
               </motion.div>
-            ))}
+              )
+            })}
           </div>
         </CardContent>
       </Card>
