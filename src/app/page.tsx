@@ -18,9 +18,7 @@ export default function Home() {
   };
 
   const handleLeaderboard = () => {
-    toast.info("🏆 Leaderboard coming soon", {
-      description: "Compete with other word masters!",
-    });
+    router.push("/leaderboard");
   };
 
   const handleRules = () => {

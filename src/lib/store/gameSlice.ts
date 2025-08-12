@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { getRandomWordsForWheel } from '@/lib/randomWords'  
+import { getRandomWordsForWheel } from '@/lib/randomWords'
+import { saveGameResult } from '@/lib/localStorage'  
 
 export interface GameState {
   timeSpent: number // Time in seconds
@@ -133,6 +134,19 @@ export const gameSlice = createSlice({
       }
     },
 
+    saveGameToLocalStorage: (state) => {
+      // Only save if game is completed and client-side
+      if (state.gameCompleted && typeof window !== 'undefined') {
+        saveGameResult({
+          timeSpent: state.timeSpent,
+          wordsFound: state.foundWords.length,
+          totalWords: state.wordsToFind.length,
+          foundWords: state.foundWords,
+          wordsToFind: state.wordsToFind,
+        })
+      }
+    },
+
   },
 })
 
@@ -154,6 +168,7 @@ export const {
   setWordsToFind,
   setAnimationStarted,
   setGameCompleted,
+  saveGameToLocalStorage,
 } = gameSlice.actions
 
 // Export reducer

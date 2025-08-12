@@ -30,6 +30,7 @@ import {
   setGameCompleted,
   resetGame,
   updateTime,
+  saveGameToLocalStorage,
 } from "@/lib/store/gameSlice";
 import { useEffect } from "react";
 import { TouchButton } from "@/components/ui/touch-button";
@@ -90,6 +91,7 @@ export default function GamePage() {
     if (allWordsFound && !gameCompleted) {
       triggerGameCompleteConfetti();
       dispatch(setGameCompleted(true));
+      dispatch(saveGameToLocalStorage());
     }
   }, [allWordsFound, gameCompleted, dispatch]);
 

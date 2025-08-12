@@ -139,7 +139,7 @@ export function CurrentWord({
                     : showError
                       ? "bg-red-500 border-red-600"
                       : isCorrectPosition
-                        ? "bg-green-200 border-green-400"
+                        ? "bg-yellow-200 border-yellow-400"
                         : "bg-slate-100 border-slate-300"
                 }`}
                 animate={
@@ -193,7 +193,7 @@ export function CurrentWord({
                         : showError 
                           ? "text-red-100" 
                           : isCorrectPosition
-                            ? "text-green-800"
+                            ? "text-yellow-600"
                             : "text-slate-800"
                     }`}
                     initial={previousLetters[index] !== letter ? { y: -64, opacity: 0 } : { y: 0, opacity: 1 }}
