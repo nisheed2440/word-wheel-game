@@ -9,7 +9,7 @@ import {
   DialogOverlay,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Trophy, Clock, Home, RotateCcw } from "lucide-react";
+import { Trophy, Clock } from "lucide-react";
 
 interface GameCompletionModalProps {
   isOpen: boolean;
@@ -75,20 +75,18 @@ export function GameCompletionModal({
             <div className="space-y-3">
               <Button
                 onClick={onNewGame}
-                className="w-full h-12 text-lg"
+                className="w-full shadow-sm cursor-pointer"
                 size="lg"
               >
-                <RotateCcw className="w-5 h-5 mr-2" />
                 New Game
               </Button>
 
               <Button
                 onClick={onMainMenu}
                 variant="outline"
-                className="w-full h-12 text-lg"
+                className="w-full shadow-sm cursor-pointer"
                 size="lg"
               >
-                <Home className="w-5 h-5 mr-2" />
                 Main Menu
               </Button>
             </div>
