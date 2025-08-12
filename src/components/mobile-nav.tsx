@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { X, Sun, Moon } from "lucide-react";
+import { selectTimeSpent } from "@/lib/store/selectors";
 
 interface MobileNavProps {
   onQuitGame?: () => void;
@@ -23,8 +25,7 @@ export default function Component({
   onThemeToggle,
   currentTheme = "light",
 }: MobileNavProps) {
-  const [timeSpent, setTimeSpent] = useState(0); // Time in seconds
-  const [isGameActive, setIsGameActive] = useState(true);
+  const timeSpent = useSelector(selectTimeSpent);
   const [showQuitModal, setShowQuitModal] = useState(false);
 
   // Format time as MM:SS
@@ -36,35 +37,13 @@ export default function Component({
       .padStart(2, "0")}`;
   };
 
-  // Timer effect
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
 
-    if (isGameActive && timeSpent < 3600) {
-      // Max 60:00 minutes (3600 seconds)
-      interval = setInterval(() => {
-        setTimeSpent((prevTime) => {
-          if (prevTime >= 3599) {
-            // Stop at 59:59
-            setIsGameActive(false);
-            return 3599;
-          }
-          return prevTime + 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isGameActive, timeSpent]);
 
   const handleClose = () => {
     setShowQuitModal(true);
   };
 
   const handleQuitConfirm = () => {
-    setIsGameActive(false);
     setShowQuitModal(false);
     onQuitGame?.();
   };

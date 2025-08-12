@@ -87,10 +87,7 @@ export default function GamePage() {
 
   // Trigger confetti and mark game as completed when all words are found
   useEffect(() => {
-    console.log("allWordsFound", allWordsFound);
-    console.log("gameCompleted", gameCompleted);
     if (allWordsFound && !gameCompleted) {
-      console.log("triggering confetti");
       triggerGameCompleteConfetti();
       dispatch(setGameCompleted(true));
     }
