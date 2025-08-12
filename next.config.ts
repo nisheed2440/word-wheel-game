@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
+  assetPrefix: "/word-wheel-game/",
+  basePath: "/word-wheel-game",
   images: {
     remotePatterns: [
       {
