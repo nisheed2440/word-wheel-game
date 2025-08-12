@@ -50,7 +50,7 @@ export const getGameResults = (): GameResult[] => {
     
     const parsed = JSON.parse(results);
     // Convert date strings back to Date objects
-    return parsed.map((result: any) => ({
+    return parsed.map((result: GameResult) => ({
       ...result,
       completedAt: new Date(result.completedAt),
     }));
