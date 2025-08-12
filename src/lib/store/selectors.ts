@@ -82,4 +82,11 @@ export const selectGameStats = createSelector(
     progress,
     averagePointsPerWord: foundWords.length > 0 ? Math.round(totalPoints / foundWords.length) : 0,
   })
+)
+
+export const selectAllWordsFound = createSelector(
+  [selectWordsToFind, selectFoundWords],
+  (wordsToFind, foundWords) => {
+    return wordsToFind.length > 0 && foundWords.length === wordsToFind.length
+  }
 ) 

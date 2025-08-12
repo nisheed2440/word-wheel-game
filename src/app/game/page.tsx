@@ -16,6 +16,7 @@ import {
   selectWordsToFind,
   selectAnimationStarted,
   selectFoundWords,
+  selectAllWordsFound,
 } from "@/lib/store/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -27,6 +28,7 @@ import {
 import { useEffect } from "react";
 import { TouchButton } from "@/components/ui/touch-button";
 import { cx } from "class-variance-authority";
+import { triggerGameCompleteConfetti } from "@/lib/confetti";
 
 export default function GamePage() {
   const router = useRouter();
@@ -41,6 +43,7 @@ export default function GamePage() {
   const allWords = useSelector(selectAllWords);
   const isGameActive = useSelector(selectIsGameActive);
   const animationStarted = useSelector(selectAnimationStarted);
+  const allWordsFound = useSelector(selectAllWordsFound);
   const dispatch = useDispatch();
   const handleBack = () => {
     router.back();
@@ -54,6 +57,13 @@ export default function GamePage() {
     console.log(wordsToFind);
     console.log(foundWords);
   }, [wordsToFind, foundWords]);
+
+  // Trigger confetti when all words are found
+  useEffect(() => {
+    if (allWordsFound) {
+      triggerGameCompleteConfetti();
+    }
+  }, [allWordsFound]);
 
   const handleLettersAtTop = (
     letters: string,
