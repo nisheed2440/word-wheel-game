@@ -5,7 +5,14 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -31,13 +38,10 @@ const formatTime = (seconds: number): string => {
 };
 
 const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
 };
 
 export default function LeaderboardPage() {
@@ -49,7 +53,7 @@ export default function LeaderboardPage() {
 
   useEffect(() => {
     const loadResults = () => {
-      const topResults = getTopResults(20);
+      const topResults = getTopResults(10);
       setResults(topResults);
       setIsLoading(false);
     };
@@ -147,13 +151,13 @@ export default function LeaderboardPage() {
           transition={{ delay: 0.2, duration: 0.4 }}
           className="text-center"
         >
-          <h1 className="text-4xl font-bold mb-2 flex items-center justify-center gap-2">
+          <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
             <Trophy className="text-yellow-500" size={32} />
             Leaderboard
           </h1>
-          <p className="text-muted-foreground">
-            Best completion times for perfect games
-          </p>
+          <h2 className="text-xl font-bold text-center">
+            Top 10 Best Times
+          </h2>
         </motion.div>
 
         {/* Results */}
@@ -164,7 +168,7 @@ export default function LeaderboardPage() {
             transition={{ delay: 0.3, duration: 0.4 }}
             className="text-center py-12"
           >
-            <Card className="max-w-md mx-auto">
+            <Card className="w-full max-w-sm bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none">
               <CardContent className="p-8">
                 <div className="space-y-4">
                   <Trophy className="mx-auto text-muted-foreground" size={48} />
@@ -187,88 +191,62 @@ export default function LeaderboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.4 }}
+            className="space-y-4"
           >
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl">Best Times</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="border-b">
-                      <tr className="text-left">
-                        <th className="p-4 font-semibold">Rank</th>
-                        <th className="p-4 font-semibold">Time</th>
-                        <th className="p-4 font-semibold">Words Found</th>
-                        <th className="p-4 font-semibold">Completion Rate</th>
-                        <th className="p-4 font-semibold">Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {results.map((result, index) => (
-                        <motion.tr
-                          key={result.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{
-                            delay: 0.4 + index * 0.05,
-                            duration: 0.3,
-                          }}
-                          className="border-b hover:bg-muted/50 transition-colors"
-                        >
-                          <td className="p-4">
-                            <div className="flex items-center gap-2">
-                              {index === 0 && (
-                                <Trophy className="text-yellow-500" size={20} />
-                              )}
-                              {index === 1 && (
-                                <Trophy className="text-gray-400" size={20} />
-                              )}
-                              {index === 2 && (
-                                <Trophy className="text-amber-600" size={20} />
-                              )}
-                              <span className="font-semibold">
-                                #{index + 1}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <Badge variant="outline" className="font-mono">
-                              {formatTime(result.timeSpent)}
-                            </Badge>
-                          </td>
-                          <td className="p-4">
-                            <span className="font-semibold">
-                              {result.wordsFound}
-                            </span>
-                            <span className="text-muted-foreground">
-                              /{result.totalWords}
-                            </span>
-                          </td>
-                          <td className="p-4">
+            <div className="grid gap-4">
+              {results.map((result, index) => (
+                <motion.div
+                  key={result.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    delay: 0.4 + index * 0.05,
+                    duration: 0.3,
+                  }}
+                >
+                  <Card className="w-full max-w-sm bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none">
+                    <CardHeader>
+                      <div className="flex items-center gap-2">
+                        {index === 0 && (
+                          <Trophy className="text-yellow-500" size={16} />
+                        )}
+                        {index === 1 && (
+                          <Trophy className="text-gray-400" size={16} />
+                        )}
+                        {index === 2 && (
+                          <Trophy className="text-amber-600" size={16} />
+                        )}
+                        <CardTitle className="text-base flex items-center justify-between w-full">
+                          <span>Rank #{index + 1}</span>
+                          <span className="text-base font-mono font-bold">
+                            {formatTime(result.timeSpent)}
+                          </span>
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap gap-1">
+                          {result.foundWords.map((word, wordIndex) => (
                             <Badge
-                              variant={
-                                result.wordsFound === result.totalWords
-                                  ? "default"
-                                  : "secondary"
-                              }
+                              key={wordIndex}
+                              className="uppercase"
                             >
-                              {Math.round(
-                                (result.wordsFound / result.totalWords) * 100
-                              )}
-                              %
+                              {word}
                             </Badge>
-                          </td>
-                          <td className="p-4 text-sm text-muted-foreground">
-                            {formatDate(result.completedAt)}
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+
+                    <CardFooter className="text-sm text-muted-foreground">
+                      Completed: {formatDate(result.completedAt)}
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         )}
 

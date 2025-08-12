@@ -19,8 +19,25 @@ export const saveGameResult = (gameResult: Omit<GameResult, 'id' | 'completedAt'
       completedAt: new Date(),
     };
     
-    const updatedResults = [...existingResults, newResult];
-    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(updatedResults));
+    // Only save completed games (all words found)
+    if (newResult.wordsFound !== newResult.totalWords) {
+      return;
+    }
+    
+    const allResults = [...existingResults, newResult];
+    
+    // Sort by completion time (ascending), then by words found (descending)
+    const sortedResults = allResults
+      .filter(result => result.wordsFound === result.totalWords) // Only completed games
+      .sort((a, b) => {
+        if (a.timeSpent !== b.timeSpent) {
+          return a.timeSpent - b.timeSpent; // Faster times first
+        }
+        return b.wordsFound - a.wordsFound; // More words found first (tie-breaker)
+      })
+      .slice(0, 10); // Keep only top 10
+    
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(sortedResults));
   } catch (error) {
     console.error('Failed to save game result:', error);
   }
@@ -54,15 +71,7 @@ export const clearLeaderboard = (): void => {
 export const getTopResults = (limit: number = 10): GameResult[] => {
   const results = getGameResults();
   
-  // Sort by completion time (ascending), then by words found (descending)
-  return results
-    .filter(result => result.wordsFound === result.totalWords) // Only completed games
-    .sort((a, b) => {
-      if (a.timeSpent !== b.timeSpent) {
-        return a.timeSpent - b.timeSpent; // Faster times first
-      }
-      return b.wordsFound - a.wordsFound; // More words found first (tie-breaker)
-    })
-    .slice(0, limit);
+  // Results are already sorted and filtered when saved, just return them
+  return results.slice(0, limit);
 };
 
