@@ -3,32 +3,49 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getTopResults, clearLeaderboard, type GameResult } from "@/lib/localStorage";
-import { ArrowLeft, Trophy, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  getTopResults,
+  clearLeaderboard,
+  type GameResult,
+} from "@/lib/localStorage";
+import { ArrowLeft, Trophy, Trash2, Sun, Moon } from "lucide-react";
 
 const formatTime = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
-  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  return `${mins.toString().padStart(2, "0")}:${secs
+    .toString()
+    .padStart(2, "0")}`;
 };
 
 const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   }).format(date);
 };
 
 export default function LeaderboardPage() {
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const [results, setResults] = useState<GameResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showClearModal, setShowClearModal] = useState(false);
 
   useEffect(() => {
     const loadResults = () => {
@@ -41,14 +58,25 @@ export default function LeaderboardPage() {
   }, []);
 
   const handleClearLeaderboard = () => {
-    if (confirm('Are you sure you want to clear the entire leaderboard? This action cannot be undone.')) {
-      clearLeaderboard();
-      setResults([]);
-    }
+    setShowClearModal(true);
+  };
+
+  const handleClearConfirm = () => {
+    clearLeaderboard();
+    setResults([]);
+    setShowClearModal(false);
+  };
+
+  const handleClearCancel = () => {
+    setShowClearModal(false);
   };
 
   const handleBack = () => {
-    router.push('/');
+    router.push("/");
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   if (isLoading) {
@@ -76,26 +104,40 @@ export default function LeaderboardPage() {
           className="flex items-center justify-between"
         >
           <Button
-            variant="outline"
-            size="sm"
+            variant="ghost"
+            size="icon"
             onClick={handleBack}
-            className="flex items-center gap-2"
+            className="h-9 w-9"
+            title="Go back"
           >
             <ArrowLeft size={16} />
-            Back
           </Button>
 
-          {results.length > 0 && (
+          <div className="flex items-center gap-2">
+            {results.length > 0 && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleClearLeaderboard}
+                className="h-9 w-9"
+                title="Clear all results"
+              >
+                <Trash2 size={16} />
+              </Button>
+            )}
+
             <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleClearLeaderboard}
-              className="flex items-center gap-2"
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="h-9 w-9"
+              title="Toggle theme"
             >
-              <Trash2 size={16} />
-              Clear All
+              <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+              <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+              <span className="sr-only">Toggle theme</span>
             </Button>
-          )}
+          </div>
         </motion.div>
 
         {/* Title */}
@@ -126,9 +168,12 @@ export default function LeaderboardPage() {
               <CardContent className="p-8">
                 <div className="space-y-4">
                   <Trophy className="mx-auto text-muted-foreground" size={48} />
-                  <h3 className="text-xl font-semibold">No games completed yet</h3>
+                  <h3 className="text-xl font-semibold">
+                    No games completed yet
+                  </h3>
                   <p className="text-muted-foreground">
-                    Complete your first word wheel game to see your results here!
+                    Complete your first word wheel game to see your results
+                    here!
                   </p>
                   <Button onClick={handleBack} className="mt-4">
                     Start Playing
@@ -165,7 +210,10 @@ export default function LeaderboardPage() {
                           key={result.id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.4 + index * 0.05, duration: 0.3 }}
+                          transition={{
+                            delay: 0.4 + index * 0.05,
+                            duration: 0.3,
+                          }}
                           className="border-b hover:bg-muted/50 transition-colors"
                         >
                           <td className="p-4">
@@ -179,7 +227,9 @@ export default function LeaderboardPage() {
                               {index === 2 && (
                                 <Trophy className="text-amber-600" size={20} />
                               )}
-                              <span className="font-semibold">#{index + 1}</span>
+                              <span className="font-semibold">
+                                #{index + 1}
+                              </span>
                             </div>
                           </td>
                           <td className="p-4">
@@ -188,16 +238,25 @@ export default function LeaderboardPage() {
                             </Badge>
                           </td>
                           <td className="p-4">
-                            <span className="font-semibold">{result.wordsFound}</span>
+                            <span className="font-semibold">
+                              {result.wordsFound}
+                            </span>
                             <span className="text-muted-foreground">
                               /{result.totalWords}
                             </span>
                           </td>
                           <td className="p-4">
-                            <Badge 
-                              variant={result.wordsFound === result.totalWords ? "default" : "secondary"}
+                            <Badge
+                              variant={
+                                result.wordsFound === result.totalWords
+                                  ? "default"
+                                  : "secondary"
+                              }
                             >
-                              {Math.round((result.wordsFound / result.totalWords) * 100)}%
+                              {Math.round(
+                                (result.wordsFound / result.totalWords) * 100
+                              )}
+                              %
                             </Badge>
                           </td>
                           <td className="p-4 text-sm text-muted-foreground">
@@ -212,8 +271,37 @@ export default function LeaderboardPage() {
             </Card>
           </motion.div>
         )}
+
+        {/* Clear Confirmation Modal */}
+        <Dialog open={showClearModal} onOpenChange={setShowClearModal}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Clear Leaderboard?</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to clear the entire leaderboard? This
+                action cannot be undone and all game results will be permanently
+                deleted.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex-col sm:flex-row gap-2">
+              <Button
+                variant="outline"
+                onClick={handleClearCancel}
+                className="w-full sm:w-auto bg-transparent"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleClearConfirm}
+                className="w-full sm:w-auto"
+              >
+                Yes, Clear All
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </motion.div>
   );
 }
-
