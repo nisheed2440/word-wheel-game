@@ -8,6 +8,7 @@ import { WordWheel } from "@/components/word-wheel";
 import { CurrentWord } from "@/components/current-word";
 import { TouchHandler } from "@/components/game/touch-handler";
 import { usePreventScroll } from "@/hooks/use-prevent-scroll";
+import { useViewportScaling } from "@/hooks/use-viewport-scaling";
 import {
   selectAllWords,
   selectCurrentWordLoading,
@@ -44,6 +45,10 @@ export default function GamePage() {
 
   // Prevent page scrolling during game
   usePreventScroll({ enabled: true });
+  
+  // Get viewport scaling calculations
+  const { currentWordScale, wheelScale, containerHeight, wheelContainerHeight } = useViewportScaling();
+  
   const currentWord = useSelector(selectCurrentWordString);
   const currentWordLoading = useSelector(selectCurrentWordLoading);
   const wordsToFind = useSelector(selectWordsToFind);
@@ -123,14 +128,15 @@ export default function GamePage() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="min-h-screen bg-muted flex flex-col"
+        className="bg-muted flex flex-col"
+        style={{ height: `${containerHeight}px`, minHeight: "100vh" }}
       >
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3 }}
-          className="flex items-center justify-between mb-8"
+          className="flex items-center justify-between"
         >
           <MobileNav
             onQuitGame={handleBack}
@@ -141,13 +147,13 @@ export default function GamePage() {
           />
         </motion.div>
 
-        <div className="space-y-4 flex-1 flex flex-col">
+        <div className="space-y-2 flex-1 flex flex-col">
           <div className="flex flex-col items-center justify-center">
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              initial={{ scale: 0.8 * currentWordScale, opacity: 0 }}
+              animate={{ scale: currentWordScale, opacity: 1, transformOrigin: 'center' }}
               transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
-              className="flex items-center justify-between mb-8"
+              className="flex items-center justify-between"
             >
               <CurrentWord
                 word={currentWord}
@@ -172,12 +178,15 @@ export default function GamePage() {
           </div>
 
           {/* Game Container */}
-          <div className="flex-1 flex items-center justify-center">
+          <div 
+            className="mt-4 flex items-center justify-center px-4"
+            style={{ height: `${wheelContainerHeight}px` }}
+          >
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              initial={{ scale: 0.8 * wheelScale, opacity: 0 }}
+              animate={{ scale: wheelScale, opacity: 1, transformOrigin: 'center' }}
               transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
-              className="w-full max-w-md flex flex-col items-center justify-center"
+              className="flex flex-col items-center justify-center"
             >
               <WordWheel
                 words={allWords}
@@ -192,17 +201,17 @@ export default function GamePage() {
           <div
             className={cx(
               wordsToFind.length - foundWords.length === 0 && "invisible",
-              "flex items-center justify-center p-6"
+              "flex items-center justify-center"
             )}
           >
             <p className="text-md text-muted-foreground">
               {wordsToFind.length - foundWords.length} WORDS LEFT
             </p>
           </div>
-          <div className="flex items-center justify-center p-6">
+          <div className="flex items-center justify-center px-4">
             <TouchButton
               size="lg"
-              className="w-full max-w-sm text-lg uppercase font-bold mt-4"
+              className="w-full max-w-sm text-lg uppercase font-bold"
               onClick={handleCheckWord}
               disabled={animationStarted}
               preventTouchDefault={false}
