@@ -9,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import Jdenticon from "react-jdenticon";
 import { getImagePath } from "@/lib/image-path";
@@ -62,9 +63,18 @@ export default function GameLanding({
 
             {/* Welcome Text */}
             <div className="text-center space-y-1">
-              <h1 className="text-2xl font-bold">Welcome</h1>
-              <p className="text-muted-foreground capitalize">{userName}</p>
+              <h1 className="text-2xl font-bold">Word Wheel</h1>
+              <p className="text-muted-foreground capitalize">Welcome {userName}</p>
             </div>
+
+            {/* Game Info Alert */}
+            <Alert className="max-w-xs">
+              <AlertTitle className="text-sm font-bold">✨ Every letter counts!</AlertTitle>
+              <AlertDescription className="text-sm">
+                Spin the wheel, find the words!
+                Think you&apos;re a wordsmith? Let&apos;s see what you&apos;ve got! 
+              </AlertDescription>
+            </Alert>
           </div>
 
           {/* Carousel Section */}
