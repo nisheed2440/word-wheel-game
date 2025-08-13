@@ -165,7 +165,7 @@ export default function LeaderboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.4 }}
-            className="text-center py-12"
+            className="text-center py-12 flex items-center justify-center"
           >
             <Card className="w-full max-w-sm bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none">
               <CardContent className="p-8">
@@ -202,8 +202,9 @@ export default function LeaderboardPage() {
                     delay: 0.4 + index * 0.05,
                     duration: 0.3,
                   }}
+                  className="flex items-center justify-center"
                 >
-                  <Card className="w-full max-w-sm bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none">
+                  <Card className="w-full max-w-md bg-background/95 backdrop-blur-sm shadow-2xl dark:shadow-none">
                     <CardHeader>
                       <div className="flex items-center gap-2">
                         {index === 0 && (

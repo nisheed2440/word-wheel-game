@@ -38,8 +38,10 @@ export default function Home() {
       className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10 relative"
     >
       {/* Theme Toggle - Top Right */}
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
+      <div className="absolute top-0 left-0 w-full">
+        <div className="max-w-4xl mx-auto flex items-center justify-end w-full h-14 px-4 bg-muted">
+          <ThemeToggle />
+        </div>
       </div>
       
       <div className="w-full max-w-sm">

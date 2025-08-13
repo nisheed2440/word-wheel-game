@@ -57,7 +57,7 @@ export default function Component({
   };
 
   return (
-    <nav className="flex items-center justify-between w-full h-14 px-4 bg-muted">
+    <nav className="max-w-4xl mx-auto flex items-center justify-between w-full h-14 px-4 bg-muted">
       {/* Close Button - Left */}
       <Button
         variant="ghost"
